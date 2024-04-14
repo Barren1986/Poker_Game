@@ -6,6 +6,7 @@ import gameobjects.GameOptions;
 import gameobjects.PayoutTable;
 import gameobjects.ScoreBoard;
 import gameobjects.Wager;
+import gameoutput.GameFile;
 import hand.Hand;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -199,42 +200,46 @@ public class DrawPoker {
     
 	// Method to handle the deal event
     private void startDeal() {
-    	
-    	// Call the clearCards method to clear the card if they are there
-    	clearCards();
-    	
-    	// Step 5: Determine if the deck should be reshuffled
-    	if (dealer.reshuffleDeck()) {
-    	    dealerArea.removeDiscardImage();
-    	}
-    	
-    	// Call the dealPlayer method
-    	dealPlayer();
-        
-        
-        // 4. Display the player cards
+        // Step 1: Clear the previous cards if they exist
+        clearCards();
+
+        // Step 2: Deal 5 cards to the player
+        dealPlayer();
+
+        // Step 3: Evaluate the hand dealt and display the hand description
+        evaluateHand();
         playerArea.showCards();
-        
-        // 5. Show the hand description
         playerArea.showHandDescr();
 
-    	// Step 6: Reset the scoreboard's win amount back to 0
-    	scoreBoard.setWinAmount(0);
+        // Step 4: Allow the player to select cards they want to replace
+        playerArea.enableCardSelect();
 
-    	// Step 7: Deal the 5 cards to the player
-        for (int i = 0; i < 5; i++) {
-            dealer.dealCard(player);
+     // Step 5: Send the selected cards to the discard pile and replace them with new cards
+        boolean[] cardsSelected = playerArea.getCardSelected();
+
+        for (int i = 0; i < cardsSelected.length; i++) {
+            if (cardsSelected[i]) {
+                // Get the card object from the player's hand at index i
+                Card card = player.getHand().getCard(i);
+                
+                // Send the card to the discard pile
+                dealerArea.showDiscardedCard(card);
+                
+                // Replace the discarded card with a new card
+                dealer.dealCard(player, i); // Assuming you have a method to replace the card
+            }
         }
-        
-        // 3. Call the evaluateHand method
-        evaluateHand();
 
-    	// Step 9: Enable the selection of all the card images
-    	playerArea.enableCardSelect();
-    	
-    	
-    }
-    
+
+
+        // Step 6: Determine if the deck should be reshuffled
+        if (dealer.reshuffleDeck()) {
+            dealerArea.removeDiscardImage();
+        }
+
+        // Step 7: Reset the scoreboard's win amount back to 0
+        scoreBoard.setWinAmount(0);
+    }    
     
  // Method to handle the draw event
     private void drawCards() {
@@ -260,12 +265,10 @@ public class DrawPoker {
                 // Deal the new card(s)
                 dealer.dealCard(player, i); // Use the dealCard method specifying the index to place the card
 
-          
+                // Evaluate the hand
+                evaluateHand();
             }
         }
-        
-        // Evaluate the hand
-        evaluateHand();
 
         // Call the endHand event
         endHand();
@@ -296,40 +299,24 @@ public class DrawPoker {
 
     	// Update the player's bank amount on the ScoreBoard object
     	scoreBoard.updateBank();
+    	
+    	// Call GameFile writeCSVData method to create data for files folder
+    	GameFile.writeCSVData("playerdata.txt", player, updatedBankAmount);
+    	
     }
 
-    private void clearCards() {
+	private void clearCards() {
         // Call gatherUsedCards() method of the dealer to move cards from player's hand to usedCards pile
-        dealer.gatherUsedCards(player);
-        
-    	// Remove the Card images from the player's hand
-    	for (int i = 0; i < 5; i++) {
-    	    playerArea.removeCardImage(i % 5); // Makes it so that the index stays within bounds
-    	}
-
-    	// Step 3: Send the card images to the discard pile
-    	Hand playerHand = player.getHand();
-    	int numberOfCards = playerHand.getCards().length; // Get the total number of cards in the hand
-    	if (numberOfCards > 0) {
-    	    for (int i = 0; i < numberOfCards; i++) {
-    	        Card card = playerHand.getCard(i); // Get the card at index i
-    	        dealerArea.showDiscardedCard(card); // Send the card image to the discard pile
-    	        dealer.takeUsedCard(player, i); // Send the card object to usedCards
-    	    }
-    	}
-
-    	// Step 4: Send the card objects (not the images) to the Deck's usedCards pile
-    	dealer.gatherUsedCards(player);
+        ((Dealer) dealer).gatherUsedCards(player);
     }
-    
-    
 
     private void dealPlayer() {
-        // Deal five cards to both the player and dealer
+        // Deal five distinct cards to the player
         for (int i = 0; i < 5; i++) {
-            ((Dealer) dealer).dealCard(player);
+            ((Dealer) dealer).dealCard(player); // Deal a card to the player
         }
     }
+
 
     private void evaluateHand() {
     	player.getHand().evaluateHand();
