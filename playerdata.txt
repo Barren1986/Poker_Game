@@ -1,0 +1,26 @@
+Player ID,Player Name,Hand,Hand Descr,Win Amount,Bank
+9765467,FastFreddy,Qh Js 3c 6s Td ,High Card Q,2550,2550
+Player ID,Player Name,Hand,Hand Descr,Win Amount,Bank
+9765467,FastFreddy,Kh Qs 7h 9s 5h ,High Card K,2450,2450
+Player ID,Player Name,Hand,Hand Descr,Win Amount,Bank
+9765467,FastFreddy,6c 3c 7c 3h Qh ,Pair 3s,2350,2350
+Player ID,Player Name,Hand,Hand Descr,Win Amount,Bank
+9765467,FastFreddy,8c 6h Qd 8s 5h ,Pair 8s,2250,2250
+Player ID,Player Name,Hand,Hand Descr,Win Amount,Bank
+9765467,FastFreddy,8c 6h Qd 8s 5h ,Pair 8s,2150,2150
+Player ID,Player Name,Hand,Hand Descr,Win Amount,Bank
+9765467,FastFreddy,Ah 3d Kc 7d Js ,High Card A,2050,2050
+Player ID,Player Name,Hand,Hand Descr,Win Amount,Bank
+9765467,FastFreddy,7h 4c Jc 8h 6s ,High Card J,1950,1950
+Player ID,Player Name,Hand,Hand Descr,Win Amount,Bank
+9765467,FastFreddy,4c 7d Js 6d Kc ,High Card K,2550,2550
+Player ID,Player Name,Hand,Hand Descr,Win Amount,Bank
+9765467,FastFreddy,3s 9d 4s Th 2s ,High Card T,2450,2450
+Player ID,Player Name,Hand,Hand Descr,Win Amount,Bank
+9765467,FastFreddy,As 8h 4c 3c 7s ,High Card A,2350,2350
+Player ID,Player Name,Hand,Hand Descr,Win Amount,Bank
+9765467,FastFreddy,9c Ad Kd 5h 9s ,Pair 9s,2250,2250
+Player ID,Player Name,Hand,Hand Descr,Win Amount,Bank
+9765467,FastFreddy,3h Kh 3d 6c 3s ,Three of a Kind 3s,2650,2650
+Player ID,Player Name,Hand,Hand Descr,Win Amount,Bank
+9765467,FastFreddy,4c 3d Js 7c 9s ,High Card J,2550,2550
