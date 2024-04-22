@@ -7,7 +7,6 @@ import gameobjects.PayoutTable;
 import gameobjects.ScoreBoard;
 import gameobjects.Wager;
 import gameoutput.GameFile;
-import hand.Hand;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -19,8 +18,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import player.Dealer;
 import player.Player;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 
 public class DrawPoker {
     
@@ -156,12 +153,7 @@ public class DrawPoker {
         });
         
     }
-    
-    // Method to exit the game
-    private void exitGame() {
-        primaryStage.close(); // Close the primary stage
-    }    
-
+   
 	private void createRightSection() {
         // Already instantiated in the attribute
         rightSection.getChildren().add(payoutTable);
@@ -265,10 +257,14 @@ public class DrawPoker {
                 // Deal the new card(s)
                 dealer.dealCard(player, i); // Use the dealCard method specifying the index to place the card
 
-                // Evaluate the hand
-                evaluateHand();
             }
+            
         }
+        
+     // Evaluate the hand
+        evaluateHand();
+        playerArea.showCards();
+        playerArea.showHandDescr();
 
         // Call the endHand event
         endHand();
@@ -278,7 +274,7 @@ public class DrawPoker {
     
     public void endHand() {
     	// Hide the selected card images
-    	playerArea.removeCardImage(0);
+    	playerArea.clearSelected();
 
     	// Disable the selection of all card images
     	playerArea.disableCardSelect();
@@ -301,13 +297,22 @@ public class DrawPoker {
     	scoreBoard.updateBank();
     	
     	// Call GameFile writeCSVData method to create data for files folder
-    	GameFile.writeCSVData("playerdata.txt", player, updatedBankAmount);
+    	GameFile.writeCSVData("playerdata.txt", player, payoutAmount);
+    	
+    	// Call writeBinaryData method
+    	GameFile.writeBinaryData("playerdata.dat", player, payoutAmount);
     	
     }
 
 	private void clearCards() {
         // Call gatherUsedCards() method of the dealer to move cards from player's hand to usedCards pile
-        ((Dealer) dealer).gatherUsedCards(player);
+		for (int i = 0; i < player.getHand().getCards().length; i++) {
+			Card card = player.getHand().getCard(i);
+			playerArea.removeCardImage(i);
+			dealerArea.showDiscardedCard(card);
+		}
+		
+		((Dealer) dealer).gatherUsedCards(player);
     }
 
     private void dealPlayer() {
@@ -321,4 +326,11 @@ public class DrawPoker {
     private void evaluateHand() {
     	player.getHand().evaluateHand();
     }
+    
+    // Method to exit the game
+    private void exitGame() {
+        primaryStage.close(); // Close the primary stage
+    }    
+
+    
 }
